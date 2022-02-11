@@ -1,6 +1,7 @@
 package com.example.gestisimpledarticles;
 
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+
+import androidx.appcompat.app.AlertDialog;
 
 public class articleSimpleActivity extends ListActivity {
 
@@ -49,6 +52,22 @@ public class articleSimpleActivity extends ListActivity {
                 addArticle();
             }
         });
+        Button btn2 = (Button) findViewById(R.id.btnFilterByDesc);
+        btn2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                askOnlyWithoutDescriptions();
+            }
+        });
+        Button btn3 = (Button) findViewById(R.id.btnFilterALL);
+        btn3.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                loadArticle();
+            }
+        });
 
         bd = new articleDatasource(this);
         loadArticle();
@@ -60,7 +79,7 @@ public class articleSimpleActivity extends ListActivity {
         Cursor cursorTasks = bd.articleList();
 
         // Now create a simple cursor adapter and set it to display
-        scTasks = new SimpleCursorAdapter(this,
+        scTasks = new articleCursorAdapter(this,
                 R.layout.row_todolistsimple,
                 cursorTasks,
                 from,
@@ -68,6 +87,15 @@ public class articleSimpleActivity extends ListActivity {
                 1);
 
         setListAdapter(scTasks);
+
+    }
+
+    private void askOnlyWithoutDescriptions(){
+        Cursor cursorTasks = bd.GetWithoutDescriptoers();
+
+        // Now create a simple cursor adapter and set it to display
+        scTasks.changeCursor(cursorTasks);
+        scTasks.notifyDataSetChanged();
     }
 
     private void refreshArticle() {
@@ -87,13 +115,12 @@ public class articleSimpleActivity extends ListActivity {
         bundle.putLong("id",-1);
 
         idActual = -1;
-///////Add task
-        Intent i = new Intent(this, articleSimpleActivity.class );
+        Intent i = new Intent(this, articleAddActivity.class );
         i.putExtras(bundle);
         startActivityForResult(i,ACTIVITY_TASK_ADD);
     }
 
-    private void updateArticle(long id) {
+    public void updateArticle(long id) {
         // Cridem a l'activity del detall de la tasca enviant com a id -1
         Bundle bundle = new Bundle();
         bundle.putLong("id",id);
@@ -101,7 +128,7 @@ public class articleSimpleActivity extends ListActivity {
         idActual = id;
 
 
-        Intent i = new Intent(this, articleSimpleActivity.class );
+        Intent i = new Intent(this, articleAddActivity.class );
         i.putExtras(bundle);
         startActivityForResult(i,ACTIVITY_TASK_UPDATE);
     }
@@ -128,5 +155,23 @@ public class articleSimpleActivity extends ListActivity {
 
         // modifiquem el id
         updateArticle(id);
+    }
+
+
+    public void deleteArticle(final int _id) {
+        // Pedimos confirmación
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage("¿Desitja eliminar l'article?");
+        builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                bd.articleDelete(_id);
+                refreshArticle();
+            }
+        });
+
+        builder.setNegativeButton("No", null);
+
+        builder.show();
     }
 }

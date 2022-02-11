@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GestióSimpleDarticles">
-        <activity android:name=".articleSimpleActivity"></activity>
+        <activity android:name=".articleAddActivity"></activity>
+        <activity android:name=".articleSimpleActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

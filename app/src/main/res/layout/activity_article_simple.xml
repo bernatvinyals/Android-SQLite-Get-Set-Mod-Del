@@ -19,6 +19,20 @@
             android:layout_height="wrap_content"
             android:text="New Task" />
 
+        <Button
+            android:id="@+id/btnFilterByDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Filter by desc" />
+
+        <Button
+            android:id="@+id/btnFilterALL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Show All" />
+
     </LinearLayout>
 
     <ListView

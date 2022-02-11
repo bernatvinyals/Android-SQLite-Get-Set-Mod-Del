@@ -48,6 +48,13 @@ public class articleDatasource {
                 null, null, TODOLIST_ID);
     }
 
+    public Cursor GetWithoutDescriptoers() {
+        // Retorem totes les tasques
+        return dbR.query(table_TODOLIST, new String[]{TODOLIST_ID,TODOLIST_CODIARTICLE,TODOLIST_DESCRIPCION,TODOLIST_PVP,TODOLIST_ESTOC},
+                TODOLIST_DESCRIPCION+"=?", new String[]{String.valueOf("")},
+                null, null, TODOLIST_ID);
+    }
+
     public Cursor article(long id) {
         // Retorna un cursor només amb el id indicat
         // Retornem les tasques que el camp DONE = 1
@@ -56,6 +63,15 @@ public class articleDatasource {
                 null, null, null);
 
     }
+
+    public Cursor CheckifExists(String id) {
+        // Retorna un cursor només amb el id indicat
+        // Retornem les tasques que el camp DONE = 1
+        return dbR.query(table_TODOLIST, new String[]{TODOLIST_ID,TODOLIST_CODIARTICLE,TODOLIST_DESCRIPCION,TODOLIST_PVP,TODOLIST_ESTOC},
+                TODOLIST_CODIARTICLE+ "=?", new String[]{String.valueOf(id)},
+                null, null, null);
+    }
+
 
     // ******************
     // Funciones de manipualación de datos
@@ -87,5 +103,22 @@ public class articleDatasource {
         // Eliminem la task amb clau primària "id"
         dbW.delete(table_TODOLIST, TODOLIST_ID + " = ?", new String[]{String.valueOf(id)});
     }
+
+    public void articlePending(long id) {
+        // Modifiquem al estat de pendent la task indicada
+        ContentValues values = new ContentValues();
+        values.put(TODOLIST_ESTOC,0);
+
+        dbW.update(table_TODOLIST,values, TODOLIST_ID + " = ?", new String[] { String.valueOf(id) });
+    }
+
+    public void articleCompleted(long id) {
+        // Modifiquem al estat de pendent la task indicada
+        ContentValues values = new ContentValues();
+        values.put(TODOLIST_ESTOC,1);
+
+        dbW.update(table_TODOLIST,values, TODOLIST_ID + " = ?", new String[] { String.valueOf(id) });
+    }
+
 
 }
